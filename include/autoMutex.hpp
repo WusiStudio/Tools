@@ -2,7 +2,7 @@
 #ifndef __AUTO_MUTEX_HPP__
 #define __AUTO_MUTEX_HPP__
 
-#include <thread>
+#include <mutex>
 
 namespace ws
 {
