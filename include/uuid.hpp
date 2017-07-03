@@ -3,11 +3,13 @@
 #define __UUID_HPP__
 #include <stdio.h> 
 #include <string>
+#include <cstring>
+#include <algorithm>
 
 #if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__SCITECH_SNAP__)
     #include <objbase.h>
 #endif
-#if defined(__UNIX__)
+#if defined(__linux__)
     #include <uuid/uuid.h>
 #endif
 
@@ -28,10 +30,10 @@ namespace ws
 					guid.Data4[3], guid.Data4[4], guid.Data4[5], 
 					guid.Data4[6], guid.Data4[7] );
 #endif
-#if defined(__UNIX__)
+#if defined(__linux__)
 			uuid_t uuid; 
 			uuid_generate ( uuid ); 
-			sprintf_s ( mVal, sizeof ( mVal ), "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", 
+			snprintf ( mVal, sizeof ( mVal ), "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", 
 				uuid[0], uuid[1], uuid[2], uuid[3], uuid[4], uuid[5], uuid[6], uuid[7], 
 				uuid[8], uuid[9], uuid[10], uuid[11], uuid[12], uuid[13], uuid[14], uuid[15] );
 #endif
@@ -54,6 +56,13 @@ namespace ws
         std::string toString(void)
         {
             return std::string( mVal );
+        }
+
+        std::string toLowerString(void)
+        {
+            std::string result( mVal );
+            std::transform( result.begin(), result.end(), result.begin(), ::tolower );
+            return result;
         }
     private:
         char mVal[33];
