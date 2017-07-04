@@ -1,6 +1,8 @@
 #include "../../include/strExt.hpp"
 #include <iostream>
 
+#include <ctime>
+
 using ws::strFormat;
 
 int main ( int argc, char ** argv )
@@ -37,6 +39,8 @@ int main ( int argc, char ** argv )
 	std::cout << strFormat ( "{0, C4}", 10.1f ) << std::endl;
 	std::cout << strFormat ( "{0, C2}", "$10.15" ) << std::endl;
 	std::cout << strFormat ( "{0, C2}", "$10.155" ) << std::endl;
+
+	std::cout << strFormat ( "{0}: {0, T}", (long)time( nullptr ) ) << std::endl;
 
 	return 0;
 }

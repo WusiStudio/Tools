@@ -13,7 +13,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "uuid.hpp"
+#include "uuidExt.hpp"
 
 namespace ws
 {
@@ -269,31 +269,73 @@ namespace ws
 			return true;
 		}
 
+		bool _format_DataTime( std::stringstream & p_strs, const std::string & p_format, const std::string & p_source )
+		{
+
+			static std::regex format_T( "^([tT])(\\.*)$" );
+			auto matchBegin = std::sregex_iterator ( p_format.begin (), p_format.end (), format_T );
+			auto matchEnd = std::sregex_iterator ();
+			if ( matchBegin == matchEnd ) { return false; }
+
+			//解析原数据
+			long stampTime = 0;
+
+
+			//原数据为时间戳
+			static std::regex regexTimestamp( "^\\d{10,19}$" );
+			matchBegin = std::sregex_iterator ( p_source.begin (), p_source.end (), regexTimestamp );
+			if( matchBegin != matchEnd )
+			{
+				stampTime = atol( p_source.c_str() );
+			}
+
+			if( !stampTime )
+			{
+				std::cout << "无法解析原数据" << std::endl;
+				return false;
+			}
+
+			time_t t = (time_t)stampTime;
+			struct tm* date_time = localtime(&t);
+
+			//输出格式
+			std::string tResult = matchBegin->str ( 2 );
+
+			if( !tResult.length() )
+			{
+				p_strs << date_time->tm_year + 1900 << "-" << date_time->tm_mon + 1 << "-" << date_time->tm_mday << " " 
+				<< date_time->tm_hour << ":" << date_time->tm_min << ":" << date_time->tm_sec;
+				return true;
+			}
+
+			return true;
+		}
+
 		//paramemt format
 		template<typename Argument>
 		std::string _format ( const std::string & p_format, const Argument & p_source )
 		{
-#define RETURN return strs.str ();
-
 			std::stringstream strs;
 			if (p_format.length () <= 0)
 			{
 				strs << p_source;
-				RETURN
+				return strs.str ();
 			}
 
 			std::stringstream ss_source;
 			ss_source << p_source;
-			//_format_aline ( strs, p_format, ss_source.str () ) || _format_D ( strs, p_format, ss_source.str () ) || _format_C ( strs, p_format, ss_source.str () ) || _format_F ( strs, p_format, ss_source.str () );
+
 			std::string s_source = ss_source.str ();
-#define FUNCTION_PARAMETER strs, p_format, s_source
-			if ( !( _format_aline( FUNCTION_PARAMETER ) || _format_D ( FUNCTION_PARAMETER ) || _format_F ( FUNCTION_PARAMETER ) || _format_C ( FUNCTION_PARAMETER ) ) )
+			if ( !( _format_aline( strs, p_format, s_source ) || 
+					_format_D ( strs, p_format, s_source ) || 
+					_format_F ( strs, p_format, s_source ) || 
+					_format_C ( strs, p_format, s_source ) || 
+					_format_DataTime( strs, p_format, s_source ) 
+			) )
 			{
 				strs << p_source;
 			}
-#undef FUNCTION_PARAMETER
-			RETURN
-#undef RETURN
+			return strs.str ();
 		}
 
         template<typename Argument>

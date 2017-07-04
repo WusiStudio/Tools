@@ -108,7 +108,7 @@ namespace ws
 
             static std::mutex tMutex;
             tMutex.lock();
-            std::cout << strFormat( "[{0, 5}] {1}", smLevelNames[p_level], p_log ) << std::endl;
+            std::cout << strFormat( "[{0, 5}] {2, T} {1} ", smLevelNames[p_level], p_log, time(nullptr) ) << std::endl;
             tMutex.unlock();
         }
 
