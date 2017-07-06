@@ -123,6 +123,8 @@ namespace ws
     };
 
     std::string log::smLevelNames[] = { "DEBUG", "INFO", "NOTICE", "WARN", "ERR", "CRIT", "ALERT", "EMERG" };
+
+    log log;
 }
 
 #endif //__LOG_HPP__
