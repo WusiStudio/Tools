@@ -3,7 +3,7 @@
 
 #include <ctime>
 
-using ws::strFormat;
+using ws::strExt::strFormat;
 
 int main ( int argc, char ** argv )
 {

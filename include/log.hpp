@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <mutex>
+#include <vector>
 
 namespace ws
 {
@@ -14,6 +15,12 @@ namespace ws
     {
     public:
         enum level{ DEBUG = 0, INFO, NOTICE, WARN, ERR, CRIT, ALERT, EMERG };
+
+        static log & Instance(void)
+        {
+            static log result;
+            return result;
+        }
 
         log()
         {
@@ -108,7 +115,7 @@ namespace ws
 
             static std::mutex tMutex;
             tMutex.lock();
-            std::cout << strFormat( "[{0, 5}] {2, T} {1} ", smLevelNames[p_level], p_log, time(nullptr) ) << std::endl;
+            std::cout << strExt::strFormat( "[{0, 5}] {2, T} {1} ", LevelNames()[p_level], p_log, time(nullptr) ) << std::endl;
             tMutex.unlock();
         }
 
@@ -118,13 +125,16 @@ namespace ws
             _printLog( p_level, strFormat( p_format, p_args... ) );
         }
 
+        static std::vector< std::string > & LevelNames(void)
+        {
+            static std::vector< std::string > smLevelNames ( { "DEBUG", "INFO", "NOTICE", "WARN", "ERR", "CRIT", "ALERT", "EMERG" } );
+            return smLevelNames;
+        }
+
         level mFilterLevel;
-        static std::string smLevelNames[];
     };
 
-    std::string log::smLevelNames[] = { "DEBUG", "INFO", "NOTICE", "WARN", "ERR", "CRIT", "ALERT", "EMERG" };
-
-    log log;
+    #define LOG ws::log::Instance()
 }
 
 #endif //__LOG_HPP__

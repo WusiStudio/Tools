@@ -3,6 +3,6 @@
 
 int main( int argc, char ** argv )
 {
-    ws::log.info( "current thread id: {0}", ws::PthreadSelf() );
+    LOG.info( "current thread id: {0}", ws::threadExt::PthreadSelf() );
     return 0;
 }
