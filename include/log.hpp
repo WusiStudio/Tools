@@ -122,7 +122,7 @@ namespace ws
         template<typename... Arguments>
         void _printLog( const level p_level, const std::string & p_format, const Arguments & ... p_args) const
         {
-            _printLog( p_level, strFormat( p_format, p_args... ) );
+            _printLog( p_level, strExt::strFormat( p_format, p_args... ) );
         }
 
         static std::vector< std::string > & LevelNames(void)
