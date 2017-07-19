@@ -43,6 +43,11 @@ namespace ws
             memcpy( mVal, p_uuid.mVal, sizeof(mVal) );
         }
 
+        bool operator!=( const uuid & p_uuid )
+        {
+            return !operator==( p_uuid );
+        }
+
         bool operator==( const uuid & p_uuid )
         {
             for( int i = 0; i < sizeof(mVal); ++i )
